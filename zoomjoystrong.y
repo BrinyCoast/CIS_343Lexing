@@ -5,6 +5,7 @@
 	int checkColor(int a, int b, int c);
 	int xLocation(int x);
 	int yLocation(int y);
+	int yylineno;
 
 %}
 %union {int ival; 
@@ -63,7 +64,7 @@ statement:	SET_COLOR INT INT INT END_STATEMENT { if(checkColor($2, $3, $4)) { se
 								printf("Rectangle not in bounds\n");
 							    }
 						   	}
-	|	END
+	|	END END_STATEMENT
 	;
 
 %%
@@ -81,25 +82,25 @@ int checkColor(int a, int b, int c){
 	if(a <= 255 && a >= 0 && b <= 255 && b >= 0 && c <= 255 && c >= 0){
 		return 1;
 	} else {
-		printf("Not a valid color\n");
+		printf("Not a valid color. line: %d\n", yylineno);
 		return 0;
 	}
 }
 //Checks if x is within the bounds, using width from zoomjoystrong.h
 int xLocation(int x){
-	if(x > 0 && x <= WIDTH){
+	if(x >= 0 && x <= WIDTH){
 		return 1;
 	} else {
-		printf("X BOUND IS OUT OF RANGE\n"); 
+		printf("X BOUND IS OUT OF RANGE. line: %d\n", yylineno); 
 		return 0;
 	}
 }
 //Checks if y is within the bounds, using height from zoomjoystrong.h
 int yLocation(int y){
-	if(y > 0 && y <= HEIGHT){
+	if(y >= 0 && y <= HEIGHT){
 		return 1;
 	} else {
-		printf("Y BOUND IS OUT OF RANGE\n"); 
+		printf("Y BOUND IS OUT OF RANGE. line: %d\n", yylineno); 
 		return 0;	
 	}
 }
