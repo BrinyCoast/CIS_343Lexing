@@ -31,10 +31,15 @@ statement_list:	statement
 	|	statement_list statement
 	;
 						     //Checks if the color is between 0-255
-statement:	SET_COLOR INT INT INT END_STATEMENT { if(checkColor($2, $3, $4)) { set_color($2, $3, $4); } }
+statement:	SET_COLOR INT INT INT END_STATEMENT { if(checkColor($2, $3, $4)) { 
+								set_color($2, $3, $4); 
+						    	} else {
+								printf("Color value not in bounds\n");
+							}
+						    }
 
 						     //Checks if circle bounds are within the limits
-	|	CIRCLE  INT INT INT END_STATEMENT   { if(xLocation($2+$4) && yLocation($3+$4) && xLocation($2-$4) && xLocation($2-$4)) { 
+	|	CIRCLE  INT INT INT END_STATEMENT   { if(xLocation($2+$4) && yLocation($3+$4) && xLocation($2-$4) && yLocation($3-$4)) { 
 								circle($2, $3, $4); 
 							} else {
 								printf("Circle not in bounds\n");
@@ -57,14 +62,13 @@ statement:	SET_COLOR INT INT INT END_STATEMENT { if(checkColor($2, $3, $4)) { se
 							}
 						    }
 
-
+							 //Checks if rectangle bounds are wihtin the limits
 	|	RECTANGLE INT INT INT INT END_STATEMENT { if(xLocation($2) && yLocation($3) && xLocation($2+$4) && yLocation($3+$5)) {
 								rectangle($2, $3, $4, $5);
 							    } else {
 								printf("Rectangle not in bounds\n");
 							    }
 						   	}
-	|	END END_STATEMENT
 	;
 
 %%
@@ -75,7 +79,7 @@ int main(int argc, char** argv){
 	finish();
 }
 int yyerror(const char* err){
-	printf("%s\n", err);
+	printf("%s%s\n", err, yylex());
 }
 //check if color is within 0-255
 int checkColor(int a, int b, int c){
@@ -104,4 +108,3 @@ int yLocation(int y){
 		return 0;	
 	}
 }
-

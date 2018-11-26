@@ -6,7 +6,7 @@
 %option yylineno 
 %%
 
-(end)       				{ return END;}
+(end;)       				{ return END;}
 [;]         				{ return END_STATEMENT;}
 (point)					{ return POINT;}
 (line)					{ return LINE;}
@@ -14,7 +14,7 @@
 (rectangle)				{ return RECTANGLE;}
 (set_color)				{ return SET_COLOR;}
 [0-9]+					{ yylval.ival = atoi(yytext); return INT; }
-[0-9]+?\.[0-9]+				{ return FLOAT;}
+[0-9]+\.[0-9]+ 				{ yylval.fval = atof(yytext); return FLOAT;}
 [\ |\n|\t|\r] 	     			; // Ignore these chars!
 .					{ printf("%s is not a token on line %u\n",yytext, yylineno );}
  
@@ -24,4 +24,5 @@
 
   yylex();    // Start lexing!
 }*/
+//fixes the error: lex.yy.c:(.text+0x587): undefined reference to `yywrap'
 int yywrap() { return 1; }
